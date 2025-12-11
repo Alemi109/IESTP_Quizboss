@@ -58,20 +58,18 @@ TEMPLATES = [
     },
 ]
 
-
-WSGI_APPLICATION = 'config.wsgi.application'
-
 SECRET_KEY = 12345
 DEBUG=False
+WSGI_APPLICATION = 'config.wsgi.application'
+
+
 
 # Database
-import dj_database_url
-import os
-
 DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # Password validation
