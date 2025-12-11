@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+
+{% block title %}Discover - IESTP QuizBoss{% endblock %}
+
+{% block extra_css %}
+<style>
+    .discover-header {
+        background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+        color: white;
+        padding: 20px;
+    }
+
+    .discover-header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .search-box {
+        background: white;
+        border-radius: 25px;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .search-box input {
+        border: none;
+        outline: none;
+        flex: 1;
+        font-size: 16px;
+        color: #333;
+    }
+
+    .search-box i {
+        color: #7C3AED;
+        font-size: 18px;
+    }
+
+    .filter-tabs {
+        display: flex;
+        gap: 15px;
+        padding: 20px;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .filter-tab {
+        padding: 10px 20px;
+        border-radius: 20px;
+        border: none;
+        background: white;
+        color: #666;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        flex-shrink: 0;
+    }
+
+    .filter-tab.active {
+        background: #7C3AED;
+        color: white;
+    }
+
+    .section {
+        padding: 0 20px 20px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .section-header h3 {
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .see-all {
+        color: #7C3AED;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .quiz-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .quiz-card {
+        background: white;
+        padding: 15px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        text-decoration: none;
+        color: #333;
+        transition: all 0.3s;
+    }
+
+    .quiz-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .quiz-icon {
+        width: 50px;
+        height: 50px;
+        background: #F3F4F6;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .quiz-icon-blue { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); color: white; }
+    .quiz-icon-pink { background: linear-gradient(135deg, #FF6B9D 0%, #EC4899 100%); color: white; }
+
+    .quiz-info {
+        flex: 1;
+    }
+
+    .quiz-info h4 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .quiz-info p {
+        font-size: 13px;
+        color: #666;
+    }
+
+    .quiz-arrow {
+        color: #7C3AED;
+        font-size: 20px;
+    }
+
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    .category-card {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        text-decoration: none;
+        color: #333;
+        transition: all 0.3s;
+    }
+
+    .category-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .category-icon {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .category-name {
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .friends-section {
+        padding: 20px;
+    }
+
+    .friends-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .friend-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: white;
+        padding: 12px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .friend-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .friend-info {
+        flex: 1;
+    }
+
+    .friend-info h4 {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+
+    .friend-info p {
+        font-size: 13px;
+        color: #7C3AED;
+        font-weight: 500;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="discover-header">
+    <h1>Discover</h1>
+    <form method="get" class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" name="search" placeholder="Me |" value="{{ search_query }}">
+    </form>
+</div>
+
+<div class="filter-tabs">
+    <button class="filter-tab active">Top</button>
+    <button class="filter-tab">Quiz</button>
+    <button class="filter-tab">Categories</button>
+    <button class="filter-tab">Friends</button>
+</div>
+
+<div class="section">
+    <div class="section-header">
+        <h3>Quiz</h3>
+        <a href="#" class="see-all">See all</a>
+    </div>
+    <div class="quiz-grid">
+        {% for quiz in quizzes %}
+        <a href="{% url 'start_quiz' %}" class="quiz-card">
+            <div class="quiz-icon quiz-icon-blue">📊</div>
+            <div class="quiz-info">
+                <h4>{{ quiz.title }}</h4>
+                <p>Math • {{ quiz.total_questions }} Quizzes</p>
+            </div>
+            <div class="quiz-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </a>
+        {% empty %}
+        <a href="{% url 'start_quiz' %}" class="quiz-card">
+            <div class="quiz-icon quiz-icon-blue">📊</div>
+            <div class="quiz-info">
+                <h4>Statistics Math Quiz</h4>
+                <p>Math • 10 Quizzes</p>
+            </div>
+            <div class="quiz-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </a>
+        <a href="{% url 'start_quiz' %}" class="quiz-card">
+            <div class="quiz-icon quiz-icon-pink">💕</div>
+            <div class="quiz-info">
+                <h4>Matrices Quiz</h4>
+                <p>Math • 5 Quizzes</p>
+            </div>
+            <div class="quiz-arrow">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header">
+        <h3>Categories</h3>
+    </div>
+    <div class="categories-grid">
+        <a href="{% url 'start_quiz' %}" class="category-card">
+            <div class="category-icon">🧮</div>
+            <div class="category-name">Math</div>
+        </a>
+        <a href="{% url 'start_quiz' %}" class="category-card">
+            <div class="category-icon">🔬</div>
+            <div class="category-name">Science</div>
+        </a>
+        <a href="{% url 'start_quiz' %}" class="category-card">
+            <div class="category-icon">🌍</div>
+            <div class="category-name">Geography</div>
+        </a>
+        <a href="{% url 'start_quiz' %}" class="category-card">
+            <div class="category-icon">📚</div>
+            <div class="category-name">History</div>
+        </a>
+    </div>
+</div>
+
+<div class="friends-section">
+    <div class="section-header">
+        <h3>Friends</h3>
+    </div>
+    <div class="friends-list">
+        {% for friendship in friends %}
+        <div class="friend-card">
+            <div class="friend-avatar">👤</div>
+            <div class="friend-info">
+                <h4>{{ friendship.friend.first_name|default:friendship.friend.username }}</h4>
+                <p>{{ friendship.friend.profile.total_points }} points</p>
+            </div>
+        </div>
+        {% empty %}
+        <div class="friend-card">
+            <div class="friend-avatar">👤</div>
+            <div class="friend-info">
+                <h4>Maren Workman</h4>
+                <p>325 points</p>
+            </div>
+        </div>
+        <div class="friend-card">
+            <div class="friend-avatar">👤</div>
+            <div class="friend-info">
+                <h4>Brandon Matrove</h4>
+                <p>298 points</p>
+            </div>
+        </div>
+        <div class="friend-card">
+            <div class="friend-avatar">👤</div>
+            <div class="friend-info">
+                <h4>Manuela Lipshutz</h4>
+                <p>407 points</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

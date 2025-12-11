@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+
+{% block title %}Leaderboard - IESTP QuizBoss{% endblock %}
+
+{% block extra_css %}
+<style>
+    .leaderboard-header {
+        background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .leaderboard-header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .tab {
+        padding: 10px 30px;
+        border-radius: 25px;
+        border: none;
+        background: rgba(255,255,255,0.2);
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+
+    .tab.active {
+        background: white;
+        color: #7C3AED;
+    }
+
+    .user-rank-card {
+        background: linear-gradient(135deg, #FF6B9D 0%, #FFB6C1 100%);
+        color: white;
+        padding: 20px;
+        margin: -30px 20px 20px;
+        border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+        text-align: center;
+    }
+
+    .rank-number {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .rank-text {
+        font-size: 14px;
+        opacity: 0.95;
+    }
+
+    .podium {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 40px 20px 20px;
+        margin: 0 20px 20px;
+        border-radius: 20px;
+        position: relative;
+    }
+
+    .podium-winners {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .winner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+    }
+
+    .winner-2 { order: 1; }
+    .winner-1 { order: 2; }
+    .winner-3 { order: 3; }
+
+    .winner-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        margin-bottom: 10px;
+        border: 3px solid white;
+        position: relative;
+    }
+
+    .winner-1 .winner-avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 40px;
+        border: 4px solid #FFD700;
+    }
+
+    .winner-medal {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 25px;
+        height: 25px;
+        background: #FFD700;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+    }
+
+    .winner-name {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    .winner-1 .winner-name {
+        font-size: 16px;
+    }
+
+    .winner-points {
+        font-size: 12px;
+        opacity: 0.9;
+    }
+
+    .podium-place {
+        width: 70px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 10px 10px 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: 800;
+        color: white;
+        margin-top: 15px;
+    }
+
+    .winner-1 .podium-place {
+        height: 80px;
+    }
+
+    .winner-2 .podium-place {
+        height: 60px;
+    }
+
+    .winner-3 .podium-place {
+        height: 40px;
+    }
+
+    .leaderboard-list {
+        padding: 20px;
+    }
+
+    .rank-item {
+        background: white;
+        padding: 15px;
+        border-radius: 15px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .rank-position {
+        font-size: 20px;
+        font-weight: 700;
+        color: #999;
+        width: 30px;
+    }
+
+    .rank-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+    }
+
+    .rank-info {
+        flex: 1;
+    }
+
+    .rank-info h4 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+
+    .rank-info p {
+        font-size: 14px;
+        color: #7C3AED;
+        font-weight: 500;
+    }
+
+    .rank-medal {
+        font-size: 24px;
+    }
+
+    .medal-gold { color: #FFD700; }
+    .medal-silver { color: #C0C0C0; }
+    .medal-bronze { color: #CD7F32; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="leaderboard-header">
+    <h1>Leaderboard</h1>
+    <div class="tabs">
+        <a href="?tab=weekly" class="tab {% if tab == 'weekly' %}active{% endif %}">Weekly</a>
+        <a href="?tab=alltime" class="tab {% if tab != 'weekly' %}active{% endif %}">All Time</a>
+    </div>
+</div>
+
+<div class="user-rank-card">
+    <div class="rank-number">#{{ user_rank }}</div>
+    <div class="rank-text">
+        You are doing better than<br>
+        {{ user_rank|add:"-1" }}% of other players!
+    </div>
+</div>
+
+{% if top_3 %}
+<div class="podium">
+    <div class="podium-winners">
+        {% for item in top_3 %}
+        <div class="winner winner-{{ forloop.counter }}">
+            <div class="winner-avatar">
+                {% if item.profile.avatar %}
+                    <img src="{{ item.profile.avatar.url }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                {% else %}
+                    👤
+                {% endif %}
+                <div class="winner-medal">{{ forloop.counter }}</div>
+            </div>
+            <div class="winner-name">{{ item.user.first_name|default:item.user.username }}</div>
+            <div class="winner-points">{{ item.points }} GP</div>
+            <div class="podium-place">{{ forloop.counter }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="leaderboard-list">
+    {% for item in leaderboard %}
+    <div class="rank-item">
+        <div class="rank-position">{{ forloop.counter }}</div>
+        <div class="rank-avatar">
+            {% if item.profile.avatar %}
+                <img src="{{ item.profile.avatar.url }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+            {% else %}
+                👤
+            {% endif %}
+        </div>
+        <div class="rank-info">
+            <h4>{{ item.user.first_name|default:item.user.username }}</h4>
+            <p>{{ item.points }} points</p>
+        </div>
+        {% if forloop.counter == 1 %}
+            <div class="rank-medal medal-gold">🥇</div>
+        {% elif forloop.counter == 2 %}
+            <div class="rank-medal medal-silver">🥈</div>
+        {% elif forloop.counter == 3 %}
+            <div class="rank-medal medal-bronze">🥉</div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,415 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfil - IESTP QuizBoss{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-header {
+        background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+        color: white;
+        padding: 30px 20px;
+        text-align: center;
+        border-radius: 0 0 30px 30px;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+        margin: 0 auto 15px;
+        border: 4px solid rgba(255,255,255,0.3);
+    }
+
+    .profile-name {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .stat-card {
+        background: rgba(255,255,255,0.15);
+        padding: 15px 10px;
+        border-radius: 15px;
+        text-align: center;
+    }
+
+    .stat-card i {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+
+    .stat-card h3 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 3px;
+    }
+
+    .stat-card p {
+        font-size: 12px;
+        opacity: 0.9;
+    }
+
+    .profile-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        padding: 20px;
+        border-bottom: 1px solid #E5E7EB;
+    }
+
+    .profile-tab {
+        padding: 10px 25px;
+        border: none;
+        background: transparent;
+        color: #666;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 20px;
+        transition: all 0.3s;
+    }
+
+    .profile-tab.active {
+        background: #7C3AED;
+        color: white;
+    }
+
+    .tab-content {
+        padding: 20px;
+    }
+
+    .badges-section h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .badges-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .badge-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .badge-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 35px;
+        margin-bottom: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .badge-cyan { background: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%); }
+    .badge-gold { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); }
+    .badge-blue { background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); }
+    .badge-pink { background: linear-gradient(135deg, #FF6B9D 0%, #EC4899 100%); }
+    .badge-purple { background: linear-gradient(135deg, #A855F7 0%, #7C3AED 100%); }
+    .badge-gray { background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%); }
+
+    .badge-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .stats-section {
+        background: white;
+        padding: 20px;
+        border-radius: 20px;
+        margin-bottom: 20px;
+    }
+
+    .stats-section h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .month-selector {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .month-selector h4 {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .month-dropdown {
+        background: #F3F4F6;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        color: #7C3AED;
+        cursor: pointer;
+    }
+
+    .quiz-count {
+        text-align: center;
+        margin: 30px 0;
+    }
+
+    .quiz-count-circle {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        color: white;
+        box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+    }
+
+    .quiz-count-number {
+        font-size: 48px;
+        font-weight: 800;
+    }
+
+    .quiz-count-total {
+        font-size: 14px;
+        opacity: 0.9;
+    }
+
+    .quiz-count-label {
+        margin-top: 15px;
+        font-size: 14px;
+        color: #666;
+        text-align: center;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .stat-box {
+        background: #F3F4F6;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+    }
+
+    .stat-box-icon {
+        font-size: 30px;
+        margin-bottom: 10px;
+    }
+
+    .stat-box-number {
+        font-size: 28px;
+        font-weight: 800;
+        color: #7C3AED;
+        margin-bottom: 5px;
+    }
+
+    .stat-box-label {
+        font-size: 13px;
+        color: #666;
+    }
+
+    .add-button {
+        position: fixed;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+        border-radius: 50%;
+        border: none;
+        color: white;
+        font-size: 32px;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+        transition: all 0.3s;
+        z-index: 100;
+    }
+
+    .add-button:hover {
+        transform: translateX(-50%) translateY(-3px);
+        box-shadow: 0 6px 25px rgba(124, 58, 237, 0.5);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-header">
+    <div class="profile-avatar">
+        {% if profile.avatar %}
+            <img src="{{ profile.avatar.url }}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+        {% else %}
+            👤
+        {% endif %}
+    </div>
+    <h2 class="profile-name">{{ profile.user.first_name|default:profile.user.username }}</h2>
+    
+    <div class="stats-cards">
+        <div class="stat-card">
+            <i class="fas fa-star"></i>
+            <h3>{{ profile.total_points }}</h3>
+            <p>Puntos Total</p>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-globe"></i>
+            <h3>#{{ rank }}</h3>
+            <p>Ranking Global</p>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-medal"></i>
+            <h3>#{{ user_badges.count }}</h3>
+            <p>Local Rank</p>
+        </div>
+    </div>
+</div>
+
+<div class="profile-tabs">
+    <button class="profile-tab active" onclick="showTab('badges')">Badge</button>
+    <button class="profile-tab" onclick="showTab('stats')">Stats</button>
+    <button class="profile-tab" onclick="showTab('details')">Details</button>
+</div>
+
+<div class="tab-content" id="badges-tab">
+    <div class="badges-section">
+        <div class="badges-grid">
+            {% for user_badge in user_badges %}
+            <div class="badge-item">
+                <div class="badge-icon badge-{{ user_badge.badge.badge_type }}">
+                    🏆
+                </div>
+                <div class="badge-name">{{ user_badge.badge.name }}</div>
+            </div>
+            {% empty %}
+            <div class="badge-item">
+                <div class="badge-icon badge-cyan">🎯</div>
+                <div class="badge-name">First Win</div>
+            </div>
+            <div class="badge-item">
+                <div class="badge-icon badge-gold">🏆</div>
+                <div class="badge-name">Champion</div>
+            </div>
+            <div class="badge-item">
+                <div class="badge-icon badge-blue">💎</div>
+                <div class="badge-name">Expert</div>
+            </div>
+            <div class="badge-item">
+                <div class="badge-icon badge-pink">💖</div>
+                <div class="badge-name">Popular</div>
+            </div>
+            <div class="badge-item">
+                <div class="badge-icon badge-purple">⭐</div>
+                <div class="badge-name">Star</div>
+            </div>
+            <div class="badge-item">
+                <div class="badge-icon badge-gray">🔒</div>
+                <div class="badge-name">Locked</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="tab-content" id="stats-tab" style="display:none;">
+    <div class="stats-section">
+        <h3>Stats</h3>
+        
+        <div class="month-selector">
+            <h4>You have played a total</h4>
+            <select class="month-dropdown">
+                <option>Monthly ▼</option>
+            </select>
+        </div>
+        
+        <div class="quiz-count">
+            <div class="quiz-count-circle">
+                <div class="quiz-count-number">{{ monthly_quizzes }}</div>
+                <div class="quiz-count-total">/80</div>
+            </div>
+            <div class="quiz-count-label">Quiz played</div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-box-icon">📝</div>
+                <div class="stat-box-number">{{ quizzes_created }}</div>
+                <div class="stat-box-label">Quiz Created</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-icon">🏆</div>
+                <div class="stat-box-number">{{ quizzes_won }}</div>
+                <div class="stat-box-label">Quiz won</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab-content" id="details-tab" style="display:none;">
+    <div class="stats-section">
+        <h3>Details</h3>
+        <p><strong>Username:</strong> {{ profile.user.username }}</p>
+        <p><strong>Email:</strong> {{ profile.user.email }}</p>
+        <p><strong>Member since:</strong> {{ profile.created_at|date:"d M Y" }}</p>
+        <p><strong>Total Quizzes:</strong> {{ profile.quizzes_played }}</p>
+        {% if is_own_profile %}
+        <br>
+        <a href="{% url 'login' %}" style="color:#7C3AED; text-decoration:none; font-weight:600;">
+            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+{% if is_own_profile %}
+<button class="add-button" title="Crear Quiz">+</button>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function showTab(tabName) {
+        // Ocultar todos los tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.style.display = 'none';
+        });
+        
+        // Remover clase active de todos los botones
+        document.querySelectorAll('.profile-tab').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Mostrar el tab seleccionado
+        document.getElementById(tabName + '-tab').style.display = 'block';
+        
+        // Activar el botón correspondiente
+        event.target.classList.add('active');
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+
+{% block title %}Resultados - IESTP QuizBoss{% endblock %}
+
+{% block extra_css %}
+<style>
+    .results-container {
+        padding: 40px 20px;
+        text-align: center;
+        min-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .congrats-icon {
+        font-size: 100px;
+        margin-bottom: 20px;
+        animation: bounce 1s ease infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .congrats-text {
+        font-size: 32px;
+        font-weight: 800;
+        color: #7C3AED;
+        margin-bottom: 10px;
+    }
+
+    .subtitle {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 30px;
+    }
+
+    .score-card {
+        background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 25px;
+        margin: 30px 0;
+        box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .score-label {
+        font-size: 14px;
+        opacity: 0.9;
+        margin-bottom: 10px;
+    }
+
+    .score-value {
+        font-size: 60px;
+        font-weight: 800;
+        margin-bottom: 20px;
+    }
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .stat-item {
+        background: rgba(255,255,255,0.15);
+        padding: 15px;
+        border-radius: 15px;
+    }
+
+    .stat-item h4 {
+        font-size: 14px;
+        opacity: 0.9;
+        margin-bottom: 5px;
+    }
+
+    .stat-item p {
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .rank-badge {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 30px;
+        font-size: 18px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 20px 0;
+        box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
+    }
+
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+        max-width: 350px;
+        margin-top: 30px;
+    }
+
+    .btn {
+        padding: 16px 32px;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border: none;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+    }
+
+    .btn-secondary {
+        background: white;
+        color: #7C3AED;
+        border: 2px solid #7C3AED;
+    }
+
+    .btn-secondary:hover {
+        background: #F3F4F6;
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="results-container">
+    <div class="congrats-icon">🎉</div>
+    <h1 class="congrats-text">¡Felicitaciones!</h1>
+    <p class="subtitle">Has completado el quiz exitosamente</p>
+
+    <div class="score-card">
+        <div class="score-label">TU PUNTAJE</div>
+        <div class="score-value">{{ attempt.score }}</div>
+        
+        <div class="stats-row">
+            <div class="stat-item">
+                <h4>Correctas</h4>
+                <p>{{ attempt.correct_answers }}/{{ attempt.total_questions }}</p>
+            </div>
+            <div class="stat-item">
+                <h4>Precisión</h4>
+                <p>{{ attempt.get_percentage|floatformat:0 }}%</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="rank-badge">
+        🏆 Puesto #{{ rank }}
+    </div>
+
+    <div class="action-buttons">
+        <a href="{% url 'start_quiz' %}" class="btn btn-primary">
+            <i class="fas fa-redo"></i>
+            Jugar de Nuevo
+        </a>
+        <a href="{% url 'leaderboard' %}" class="btn btn-secondary">
+            <i class="fas fa-trophy"></i>
+            Ver Ranking
+        </a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="fas fa-home"></i>
+            Volver al Home
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Animación de confetti
+    function createConfetti() {
+        const colors = ['#7C3AED', '#FFD700', '#FF6B9D', '#4ADE80'];
+        for (let i = 0; i < 50; i++) {
+            setTimeout(() => {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-20px';
+                confetti.style.borderRadius = '50%';
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                document.body.appendChild(confetti);
+                
+                let fall = 0;
+                const fallInterval = setInterval(() => {
+                    fall += 5;
+                    confetti.style.top = fall + 'px';
+                    if (fall > window.innerHeight) {
+                        clearInterval(fallInterval);
+                        confetti.remove();
+                    }
+                }, 20);
+            }, i * 50);
+        }
+    }
+    
+    window.addEventListener('load', createConfetti);
+</script>
+{% endblock %}

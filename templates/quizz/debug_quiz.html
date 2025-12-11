@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Debug Quiz - IESTP QuizBoss{% endblock %}
+
+{% block content %}
+<div style="padding: 20px; max-width: 800px; margin: 0 auto;">
+    <h1>🔧 Página de Debug del Quiz</h1>
+    
+    <div style="background: #F3F4F6; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h2>Estado de la Sesión:</h2>
+        <ul>
+            <li><strong>Usuario:</strong> {{ request.user.username }}</li>
+            <li><strong>Autenticado:</strong> {{ request.user.is_authenticated }}</li>
+            <li><strong>Preguntas en sesión:</strong> {{ request.session.quiz_questions|default:"Ninguna" }}</li>
+            <li><strong>Pregunta actual:</strong> {{ request.session.current_question|default:"0" }}</li>
+            <li><strong>Puntos:</strong> {{ request.session.score|default:"0" }}</li>
+            <li><strong>Correctas:</strong> {{ request.session.correct_answers|default:"0" }}</li>
+        </ul>
+    </div>
+    
+    <div style="background: #DBEAFE; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h2>Estado de la Base de Datos:</h2>
+        <ul>
+            <li><strong>Total de preguntas:</strong> {{ total_questions }}</li>
+            <li><strong>Preguntas activas:</strong> {{ active_questions }}</li>
+            <li><strong>Categorías:</strong> {{ total_categories }}</li>
+        </ul>
+    </div>
+    
+    <div style="margin: 20px 0;">
+        <h2>Acciones:</h2>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="{% url 'start_quiz' %}" style="background: #7C3AED; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none;">
+                🎯 Empezar Quiz
+            </a>
+            <a href="{% url 'play_quiz' %}" style="background: #10B981; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none;">
+                ▶️ Ir a Play Quiz
+            </a>
+            <a href="{% url 'home' %}" style="background: #6B7280; color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none;">
+                🏠 Volver al Home
+            </a>
+        </div>
+    </div>
+    
+    {% if sample_questions %}
+    <div style="background: #FEF3C7; padding: 20px; border-radius: 10px; margin: 20px 0;">
+        <h2>Muestra de Preguntas (primeras 5):</h2>
+        <ol>
+        {% for q in sample_questions %}
+            <li>{{ q.question_text|truncatewords:15 }} ({{ q.answers.count }} respuestas)</li>
+        {% endfor %}
+        </ol>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
