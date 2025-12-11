@@ -61,6 +61,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+SECRET_KEY = 12345
+DEBUG=False
 
 # Database
 import dj_database_url
@@ -112,3 +114,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'welcome'
+
